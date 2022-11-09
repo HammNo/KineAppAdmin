@@ -1,0 +1,7 @@
+{
+  "name": "KineAppAdmin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
