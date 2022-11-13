@@ -1,0 +1,13 @@
+.form-content{
+  max-width: 300px;
+}
+
+.form-title{
+  font-size: 1.4em;
+}
+
+@media screen and (min-width : 576px) {
+  .form-title{
+    font-size: 1.5em;
+  }
+}

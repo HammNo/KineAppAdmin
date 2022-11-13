@@ -1,15 +1,23 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { CanLoginGuard } from './core/guards/can-login.guard';
+import { IsConnectedGuard } from './core/guards/is-connected.guard';
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./features/home/home.module').then( m => m.HomePageModule),
+    canActivate : [IsConnectedGuard]
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./features/login/login.module').then( m => m.LoginPageModule),
+    canActivate : [CanLoginGuard]
   },
 ];
 

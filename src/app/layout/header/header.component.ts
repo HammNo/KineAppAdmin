@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { LoginService } from 'src/app/core/services/login.service';
 import { takeUntil } from 'rxjs/operators';
-import { LoginService } from './core/services/login.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
+
   isLogged : boolean = false;
   destroyed$: Subject<boolean> = new Subject();
 

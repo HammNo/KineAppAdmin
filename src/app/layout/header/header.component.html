@@ -1,0 +1,18 @@
+
+<ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="flex-row flex-aCenter" size="3" sizeSm="1">
+        <ion-buttons>
+          <ion-menu-button *ngIf="isLogged" slot="start"></ion-menu-button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col class="flex-row flex-aCenter" size="9" sizeSm="3">
+        <ion-title class="header-title">KineApp</ion-title>
+      </ion-col>
+      <ion-col class="ion-hide-sm-down" sizeSm="8">
+          <app-login-infos></app-login-infos>
+      </ion-col>
+  </ion-row>
+  </ion-grid>
+</ion-toolbar>

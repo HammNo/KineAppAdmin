@@ -1,0 +1,16 @@
+   <ion-content class="form-content ion-text-center">
+    <ion-title color="primary" class="form-title ion-margin-top">
+      Authentification
+    </ion-title>
+    <form class="ion-margin-top" [formGroup]="fg" (ngSubmit)="submit()">
+      <ion-item>
+        <ion-label position="floating">Utilisateur</ion-label>
+        <ion-input type="text" autocomplete="off" formControlName="username" clearInput="true"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Mot de passe</ion-label>
+        <ion-input type="password" formControlName="password" clearInput="true"></ion-input>
+      </ion-item>
+      <ion-button class="ion-margin-top" autocomplete="off" ion-button type="submit" block [disabled]="fg.invalid">Se connecter</ion-button>
+    </form>
+  </ion-content>

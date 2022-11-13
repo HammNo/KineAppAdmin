@@ -1,0 +1,4 @@
+<div class="flex-row flex-jEnd flex-aCenter" *ngIf="isLogged">
+  <p class="ion-hide-sm-down ion-margin-end">Bonjour {{user.name}}</p>
+  <ion-button size="small" (click)="logout()">Se déconnecter</ion-button>
+</div>

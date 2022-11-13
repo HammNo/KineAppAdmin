@@ -24,3 +24,28 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.center-text{
+  text-align: center;
+}
+
+.flex-row{
+  min-height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-jCenter{
+  justify-content: center;
+}
+
+.flex-jEnd{
+  justify-content: flex-end;
+}
+
+.flex-aCenter{
+  align-items: center;
+}
+
+
+
