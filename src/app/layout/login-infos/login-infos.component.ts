@@ -3,8 +3,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoginService } from 'src/app/core/services/login.service';
 import { NavController } from "@ionic/angular";
-import { User } from 'src/app/core/models/user.model';
 import { ToastTemplatesService } from 'src/app/core/services/toast-templates.service';
+import { UserModel } from 'src/app/core/models/user.model';
 
 @Component({
   selector: 'app-login-infos',
@@ -15,7 +15,7 @@ export class LoginInfosComponent implements OnInit, OnDestroy {
 
   isLogged : boolean = false;
   destroyed$: Subject<boolean> = new Subject();
-  user! : User | null;
+  user! : UserModel | null;
 
   constructor(
     private _loginService : LoginService,

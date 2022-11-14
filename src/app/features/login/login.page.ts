@@ -10,7 +10,7 @@ import { NavController } from '@ionic/angular';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  host: {'class': 'flex-row flex-jCenter'}
+  host: {'class': 'content-page flex-row flex-jCenter'}
 })
 export class LoginPage implements OnInit, OnDestroy {
 
@@ -43,8 +43,8 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   submit(){
-    if(this.fg.invalid)
-      return;
+    // if(this.fg.invalid)
+    //   return;
     // this._loginService.login(this.fg.value).subscribe({
     //   next : async (data) =>{
     //     this._toastTemplatesService.authSuccess();

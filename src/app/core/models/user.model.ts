@@ -1,5 +1,5 @@
 
-export interface User{
+export interface UserModel{
   name : string;
   email : string;
 }

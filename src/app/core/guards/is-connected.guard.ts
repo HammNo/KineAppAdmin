@@ -18,7 +18,7 @@ export class IsConnectedGuard implements CanActivate{
     state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
       const isConnected = this._loginService.token$.value != null;
       if(!isConnected){
-        this._router.navigateRoot(['login']);
+        this._router.navigateRoot(['/login']);
       }
       return isConnected;
   }

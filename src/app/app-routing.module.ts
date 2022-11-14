@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./features/home/home.module').then( m => m.HomePageModule),
+    loadChildren: () => import('./features/calendar/calendar.module').then( m => m.CalendarPageModule),
     canActivate : [IsConnectedGuard]
   },
   {

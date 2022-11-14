@@ -47,5 +47,15 @@
   align-items: center;
 }
 
+.content-page{
+  padding : 10px;
+}
+
+@media screen and (min-width : 576px) {
+  .content-page{
+    padding : 30px;
+  }
+}
+
 
 

@@ -6,19 +6,16 @@ ion-col {
   padding: 0px;
 }
 
-
-
 .header-title {
   font-size: 1.7em;
   font-weight: bold;
-  text-align: left;
+  text-align: center;
 }
-
-
 
 @media screen and (min-width : 576px) {
   .header-title {
     font-size: 1.9em;
+    text-align: left;
   }
 
   ion-row {
