@@ -9,14 +9,14 @@ import { LoginService } from "../services/login.service";
 })
 export class IsConnectedGuard implements CanActivate{
   constructor(
-     private _loginService: LoginService,
+     private _loginSvc: LoginService,
      private _router : NavController
      ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-      const isConnected = this._loginService.token$.value != null;
+      const isConnected = this._loginSvc.token$.value != null;
       if(!isConnected){
         this._router.navigateRoot(['/login']);
       }

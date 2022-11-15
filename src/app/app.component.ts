@@ -13,11 +13,11 @@ export class AppComponent implements OnInit, OnDestroy {
   destroyed$: Subject<boolean> = new Subject();
 
   constructor(
-    private _loginService : LoginService,
+    private _loginSvc : LoginService,
   ) { }
 
   ngOnInit() {
-    this._loginService.token$
+    this._loginSvc.token$
                       .pipe(takeUntil(this.destroyed$))
                       .subscribe(data => {
                         if(data != null){

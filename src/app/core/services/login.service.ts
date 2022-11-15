@@ -38,7 +38,7 @@ export class LoginService {
         catchError(err =>{
           throw err.error;
         })
-    );
+      );
   }
 
   loginMock(){ //Method for developement without API purpose

@@ -19,14 +19,14 @@ export class LoginPage implements OnInit, OnDestroy {
   destroyed$: Subject<boolean> = new Subject();
 
   constructor(
-    private _loginService : LoginService,
+    private _loginSvc : LoginService,
     private _fb: FormBuilder,
-    private _toastTemplatesService : ToastTemplatesService,
+    private _toastTemplatesSvc : ToastTemplatesService,
     private _router : NavController
   ) { }
 
   ngOnInit() {
-    this._loginService.token$
+    this._loginSvc.token$
                       .pipe(takeUntil(this.destroyed$))
                       .subscribe(data => {
                         this.isLogged = true;
@@ -43,20 +43,20 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   submit(){
-    // if(this.fg.invalid)
-    //   return;
-    // this._loginService.login(this.fg.value).subscribe({
-    //   next : async (data) =>{
-    //     this._toastTemplatesService.authSuccess();
-    //     this._router.navigateRoot(['home']);
-    //   },
-    //   error : async (err) => {
-    //     this._toastTemplatesService.authFail();
-    //   }
-    // });
-    this._loginService.loginMock(); //!for developement without API purpose
-    this._toastTemplatesService.authSuccess(); //!for developement without API purpose
-    this._router.navigateRoot(['home']); //!for developement without API purpose
+    if(this.fg.invalid)
+      return;
+    this._loginSvc.login(this.fg.value).subscribe({
+      next : async (data) =>{
+        this._toastTemplatesSvc.authSuccess();
+        this._router.navigateRoot(['home']);
+      },
+      error : async (err) => {
+        this._toastTemplatesSvc.authFail();
+      }
+    });
+    // this._loginSvc.loginMock(); //!for developement without API purpose
+    // this._toastTemplatesSvc.authSuccess(); //!for developement without API purpose
+    // this._router.navigateRoot(['home']); //!for developement without API purpose
   }
 
 }

@@ -10,17 +10,17 @@ import { ToastTemplatesService } from "../services/toast-templates.service";
 })
 export class CanLoginGuard implements CanActivate{
   constructor(
-     private _loginService: LoginService,
-     private _toastTemplatesService : ToastTemplatesService,
+     private _loginSvc: LoginService,
+     private _toastTemplatesSvc : ToastTemplatesService,
      private _router : Router
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-      const isConnected = this._loginService.token$.value != null;
+      const isConnected = this._loginSvc.token$.value != null;
       if(isConnected){
-        this._toastTemplatesService.alreadyConnected();
+        this._toastTemplatesSvc.alreadyConnected();
         this._router.navigate(['home']);
       }
       return !isConnected;

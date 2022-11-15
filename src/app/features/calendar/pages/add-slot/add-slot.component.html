@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-title color="primary" class="form-title ion-margin-top">
+          Ajouter un créneau
+        </ion-title>
+      </ion-col>
+      <ion-col>
+        <ion-button size="small" color="danger" (click)="dismiss()">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
+<ion-content>
+  <form class="ion-margin-top" [formGroup]="fg" *ngIf="fg"  (ngSubmit)="submit()">
+    <ion-item>
+      <ion-label>Jour</ion-label>
+      <ion-input type="date" formControlName="date"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Début</ion-label>
+      <ion-input type="time" formControlName="startTime"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Fin</ion-label>
+      <ion-input type="time" formControlName="endTime"></ion-input>
+    </ion-item>
+    <ion-button class="ion-margin-top" size="small" type="submit" [disabled]="!fg.valid">Ajouter</ion-button>
+  </form>
+</ion-content>

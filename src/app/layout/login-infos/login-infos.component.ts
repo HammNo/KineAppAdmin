@@ -18,13 +18,13 @@ export class LoginInfosComponent implements OnInit, OnDestroy {
   user! : UserModel | null;
 
   constructor(
-    private _loginService : LoginService,
+    private _loginSvc : LoginService,
     private _router : NavController,
-    private _toastTemplatesService : ToastTemplatesService,
+    private _toastTemplatesSvc : ToastTemplatesService,
   ) { }
 
   ngOnInit() {
-    this._loginService.token$
+    this._loginSvc.token$
                       .pipe(takeUntil(this.destroyed$))
                       .subscribe(data => {
                         if(data != null){
@@ -34,7 +34,7 @@ export class LoginInfosComponent implements OnInit, OnDestroy {
                           this.isLogged = false;
                         }
                       });
-    this._loginService.user$
+    this._loginSvc.user$
                       .pipe(takeUntil(this.destroyed$))
                       .subscribe(data => {
                         if(data != null){
@@ -50,9 +50,9 @@ export class LoginInfosComponent implements OnInit, OnDestroy {
 
   logout(){
     if(this.isLogged){
-      this._loginService.logout();
+      this._loginSvc.logout();
       this._router.navigateRoot(['login']);
-      this._toastTemplatesService.logout();
+      this._toastTemplatesSvc.logout();
     }
   }
 

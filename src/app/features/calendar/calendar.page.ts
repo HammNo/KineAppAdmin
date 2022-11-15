@@ -12,9 +12,13 @@ import {
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { ModalController } from '@ionic/angular';
 import { HostListener } from '@angular/core';
-import { LoginPage } from '../login/login.page';
 import { Calendar } from '@fullcalendar/core';
-
+import { CalendarService } from './services/calendar.service';
+import { WeekModel } from './models/week.model';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import utils from 'src/app/utils/utils';
+import { AddSlotComponent } from './pages/add-slot/add-slot.component';
 
 defineFullCalendarElement();
 
@@ -24,47 +28,47 @@ defineFullCalendarElement();
   styleUrls: ['./calendar.page.scss'],
   host: { class: 'content-page' },
 })
-export class CalendarPage implements OnInit{
+export class CalendarPage{
 
   calendar!: Calendar;
+  destroyed$: Subject<boolean> = new Subject();
+  events! : any[];
 
   @ViewChild('calendar') calendarRef: ElementRef<FullCalendarElement>; //Required to get the calendar
 
   @HostListener('window:resize') //Listener to adjust the number of days displayed depending the window size
   onResize() {
-    this.calendar.changeView(this.getView());
+    this.calendar.changeView(window.innerWidth < 576 ? 'timeGridThreeDays' : 'timeGridWeek');
   }
 
   constructor(
-    private modalCtrl: ModalController,
+    private _modalCtrl: ModalController,
+    private _calendarSvc : CalendarService
   ) {}
 
-  ngOnInit(){
+  ionViewDidEnter(){
+    this.initCalendar();
+    this.tryRenderCalendar();
+    this._calendarSvc.currentWeek$
+                      .pipe(takeUntil(this.destroyed$))
+                      .subscribe(week => {
+                        if(week != null){
+                          this.renderTSEvents(week);
+                        }
+                      });
+    this._calendarSvc.getWeek(new Date()).subscribe();
   }
 
-  ionViewDidEnter(){
+  initCalendar(){
     this.calendar = new Calendar(this.calendarRef.nativeElement, {
       plugins: [timeGridPlugin],
-      initialView: this.getView(),
+      initialView: window.innerWidth < 576 ? 'timeGridThreeDays' : 'timeGridWeek',
       locale: 'fr',
       height: '100%',
       allDaySlot: false,
-      firstDay: 1,
+      firstDay: 1, //Monday
       headerToolbar: false,
-      events: [
-        {
-          title: 'Test Event',
-          date: '2022-11-14',
-          start: '2022-11-14T12:30:00',
-          end: '2022-11-14T13:00:00',
-        },
-        {
-          title: 'Test Event 2',
-          date: '2022-11-14',
-          start: '2022-11-14T13:00:00',
-          end: '2022-11-14T13:30:00',
-        },
-      ],
+      events: [],
       eventClick: async (info) => await this.eventHandler(info),
       views: {
         timeGridThreeDays: {
@@ -72,26 +76,48 @@ export class CalendarPage implements OnInit{
           duration: { days: 3 },
         },
       },
-      slotMinTime: '09:00:00',
+      slotMinTime: '08:00:00',
       slotMaxTime : '20:00:00'
     });
-    const interval = setInterval(() => {
+  }
+
+  tryRenderCalendar(){
+    const interval = setInterval(() => { //Make sure the calendar is well rendered
       this.calendar.render();
       if(this.calendarRef.nativeElement.offsetHeight > 0){
         clearInterval(interval);
       }
     }, 50);
-
   }
 
-  getView() : string{
-    return window.innerWidth < 576 ? 'timeGridThreeDays' : 'timeGridWeek';
+  renderTSEvents(week : WeekModel){
+    this.calendar.removeAllEvents();
+    week.days.forEach((day) => {
+      day.timeSlots.forEach((timeSlot) => {
+        this.calendar.addEvent({
+          start : utils.toFullDate(day.date, timeSlot.startTime),
+          end : utils.toFullDate(day.date, timeSlot.endTime)
+        });
+      });
+    });
   }
 
   async eventHandler(infos : EventClickArg){
-    const modal = await this.modalCtrl.create({
-      component : LoginPage
+    // const modal = await this._modalCtrl.create({
+    // });
+    // modal.present();
+  }
+
+  async addSlot(){
+    const modal = await this._modalCtrl.create({
+      component : AddSlotComponent
     });
     modal.present();
+  }
+
+  ionViewDidLeave() { // OnDestroy's ionic equivalent
+    this.destroyed$.next(false);
+    this.destroyed$.complete();
+    this.calendar.destroy();
   }
 }
