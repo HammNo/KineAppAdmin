@@ -37,7 +37,7 @@ export class AddSlotComponent {
                                           this._calendarSvc.getWeek(new Date()).subscribe();
                                         },
                                         error : (err) => {
-
+                                          console.log(err);
                                         }
     });
     this._modalCtrl.dismiss();

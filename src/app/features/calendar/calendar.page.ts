@@ -110,7 +110,8 @@ export class CalendarPage{
 
   async addSlot(){
     const modal = await this._modalCtrl.create({
-      component : AddSlotComponent
+      component : AddSlotComponent,
+      cssClass : 'add-modal'
     });
     modal.present();
   }
@@ -120,4 +121,6 @@ export class CalendarPage{
     this.destroyed$.complete();
     this.calendar.destroy();
   }
+
+  //Web Worker
 }

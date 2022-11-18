@@ -1,2 +1,10 @@
 
 
+ion-modal.add-modal::part(content) {
+  --height: 20%;
+  // position: absolute;
+  // top: 5%;
+  // --width: 90%;
+  // border-radius: 25px;
+  display: block;
+}

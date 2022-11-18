@@ -55,7 +55,17 @@
   .content-page{
     padding : 30px;
   }
-}
 
+  ion-modal.add-modal::part(content) {
+    --height: 40%;
+    --width: 40%;
+    // position: absolute;
+    // top: 5%;
+    // --width: 90%;
+    // border-radius: 25px;
+    display: block;
+  }
+
+}
 
 
