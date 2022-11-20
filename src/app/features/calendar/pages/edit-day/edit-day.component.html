@@ -3,7 +3,7 @@
     <ion-row>
       <ion-col size="10" class="flex-row flex-aCenter">
         <ion-title color="primary">
-          Ajouter un créneau
+          Modifier la journée
         </ion-title>
       </ion-col>
       <ion-col size="2" class="flex-row flex-aCenter">
@@ -14,22 +14,19 @@
     </ion-row>
   </ion-grid>
 </ion-header>
+
 <ion-content>
   <form class="ion-margin-top" [formGroup]="fg" *ngIf="fg"  (ngSubmit)="submit()">
     <ion-item>
-      <ion-label>Jour</ion-label>
-      <ion-input type="date" formControlName="date"></ion-input>
+      <ion-label>Visibilité</ion-label>
+      <ion-toggle formControlName="visible"></ion-toggle>
     </ion-item>
     <ion-item>
-      <ion-label>Début</ion-label>
-      <ion-input type="time" formControlName="startTime"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>Fin</ion-label>
-      <ion-input type="time" formControlName="endTime"></ion-input>
+      <ion-label>Note</ion-label>
+      <ion-input type="text" formControlName="note"></ion-input>
     </ion-item>
     <div class="flex-row flex-jCenter ion-margin-top">
-      <ion-button size="small" type="submit" [disabled]="!fg.valid">Ajouter</ion-button>
+      <ion-button size="small" type="submit" [disabled]="!isValidForm()">Modifier</ion-button>
     </div>
   </form>
 </ion-content>

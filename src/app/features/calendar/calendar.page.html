@@ -1,6 +1,8 @@
 
 
 <full-calendar #calendar></full-calendar>
-<div class="ion-margin-top">
-  <ion-button size="small" (click)="addSlot()">Ajouter</ion-button>
+<div class="flex-row flex-jCenter ion-margin-top">
+  <ion-button size="small" (click)="addSlotHandler()">Ajouter</ion-button>
+  <ion-button size="small" (click)="changeWeek(-7)">Précédent</ion-button>
+  <ion-button size="small" (click)="changeWeek(1)">Suivant</ion-button>
 </div>

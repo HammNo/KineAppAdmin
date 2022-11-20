@@ -1,7 +1,7 @@
 import { TimeSlotModel } from "./timeSlot.model";
 
 export interface DayModel{
-  id : number;
+  id : string;
   date : Date;
   note? : string;
   visible : boolean;

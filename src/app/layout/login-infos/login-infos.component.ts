@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { LoginService } from 'src/app/core/services/login.service';
 import { NavController } from "@ionic/angular";
 import { ToastTemplatesService } from 'src/app/core/services/toast-templates.service';
-import { UserModel } from 'src/app/core/models/user.model';
+import { AdminModel } from 'src/app/core/models/admin.model';
 
 @Component({
   selector: 'app-login-infos',
@@ -15,7 +15,7 @@ export class LoginInfosComponent implements OnInit, OnDestroy {
 
   isLogged : boolean = false;
   destroyed$: Subject<boolean> = new Subject();
-  user! : UserModel | null;
+  profile! : AdminModel | null;
 
   constructor(
     private _loginSvc : LoginService,
@@ -34,11 +34,11 @@ export class LoginInfosComponent implements OnInit, OnDestroy {
                           this.isLogged = false;
                         }
                       });
-    this._loginSvc.user$
+    this._loginSvc.profile$
                       .pipe(takeUntil(this.destroyed$))
                       .subscribe(data => {
                         if(data != null){
-                          this.user = data;
+                          this.profile = data;
                         }
                       });
   }

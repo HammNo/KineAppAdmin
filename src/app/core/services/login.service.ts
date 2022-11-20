@@ -5,7 +5,7 @@ import { LoginResponseModel } from '../models/login-response.model';
 import { LoginRequestModel } from '../models/login-request.model';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { UserModel } from '../models/user.model';
+import { AdminModel } from '../models/admin.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ import { UserModel } from '../models/user.model';
 export class LoginService {
 
   token$: BehaviorSubject<string|null> = new BehaviorSubject<string|null>(null);
-  user$: BehaviorSubject<UserModel|null> = new BehaviorSubject<UserModel|null>(null);
+  profile$: BehaviorSubject<AdminModel|null> = new BehaviorSubject<AdminModel|null>(null);
 
   constructor(
     private _http: HttpClient
@@ -22,7 +22,7 @@ export class LoginService {
     if(data){
       let obj = JSON.parse(data);
       this.token$.next(obj.token);
-      this.user$.next(obj.user);
+      this.profile$.next(obj.profile);
     }
   }
 
@@ -31,7 +31,7 @@ export class LoginService {
       .pipe(
         tap(response => {
           this.token$.next(response.token);
-          this.user$.next(response.user);
+          this.profile$.next(response.profile);
           let string = JSON.stringify(response);
           localStorage.setItem('user', string);
         }),
@@ -43,14 +43,14 @@ export class LoginService {
 
   loginMock(){ //Method for developement without API purpose
     this.token$.next("test test test");
-    this.user$.next({name : 'Test', email : 'test@mail.com'});
-    let string = JSON.stringify({user : this.user$.value, token : this.token$.value});
+    this.profile$.next({name : 'Test', email : 'test@mail.com'});
+    let string = JSON.stringify({user : this.profile$.value, token : this.token$.value});
     localStorage.setItem('user', string);
   }
 
   logout(){
     this.token$.next(null);
-    this.user$.next(null);
+    this.profile$.next(null);
     localStorage.removeItem('user');
   }
 }

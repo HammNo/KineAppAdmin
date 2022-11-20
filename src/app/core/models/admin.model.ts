@@ -1,5 +1,5 @@
 
-export interface UserModel{
+export interface AdminModel{
   name : string;
   email : string;
 }

@@ -1,19 +1,22 @@
 <ion-app>
 
-  <ion-header>
-    <app-header>
-    </app-header>
-  </ion-header>
+  <div class="ion-page" id="menu-content">
 
-  <ion-content>
-    <app-menu *ngIf="isLogged"></app-menu>
-    <ion-router-outlet id="menu-content"></ion-router-outlet>
-    <ion-router-outlet></ion-router-outlet>
-  </ion-content>
+    <ion-header>
+      <app-header>
+      </app-header>
+    </ion-header>
 
-  <ion-footer>
-    <app-footer>
-    </app-footer>
-  </ion-footer>
+    <ion-content>
+      <app-menu *ngIf="isLogged"></app-menu>
+      <ion-router-outlet></ion-router-outlet>
+    </ion-content>
+
+    <ion-footer>
+      <app-footer>
+      </app-footer>
+    </ion-footer>
+
+  </div>
 
 </ion-app>

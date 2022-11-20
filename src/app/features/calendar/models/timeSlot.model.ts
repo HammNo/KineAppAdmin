@@ -1,6 +1,6 @@
 
 export interface TimeSlotModel{
-  id : number;
+  id : string;
   startTime : string;
   endTime : string;
   note? : string;

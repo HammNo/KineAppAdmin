@@ -25,12 +25,22 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+
+
+:root {
+  --fc-border-color: #4139325c; //Set full calendar border color
+}
+
+
 .center-text{
   text-align: center;
 }
 
-.flex-row{
+.full-height{
   min-height: 100%;
+}
+
+.flex-row{
   display: flex;
   flex-direction: row;
 }
@@ -51,21 +61,36 @@
   padding : 10px;
 }
 
+.menu-content-open{ //Unset the pointer-events property to prevent click disable effect when the menu is open
+  pointer-events: unset !important;
+}
+
 @media screen and (min-width : 576px) {
   .content-page{
     padding : 30px;
   }
 
   ion-modal.add-modal::part(content) {
-    --height: 40%;
-    --width: 40%;
-    // position: absolute;
-    // top: 5%;
-    // --width: 90%;
-    // border-radius: 25px;
+    --height: 280px;
+    --width: 400px;
+    border-radius: 25px;
     display: block;
   }
 
+  ion-modal.edit-day-modal::part(content) {
+    --height: 250px;
+    --width: 350px;
+    border-radius: 25px;
+    display: block;
+  }
+
+  ion-modal.show-slot-modal::part(content) {
+    --height: 250px;
+    --width: 400px;
+    border-radius: 25px;
+    display: block;
+  }
 }
+
 
 

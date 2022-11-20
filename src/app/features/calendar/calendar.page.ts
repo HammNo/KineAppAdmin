@@ -19,6 +19,11 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import utils from 'src/app/utils/utils';
 import { AddSlotComponent } from './pages/add-slot/add-slot.component';
+import { DayModel } from './models/day.model';
+import { EditDayComponent } from './pages/edit-day/edit-day.component';
+import { ShowSlotComponent } from './pages/show-slot/show-slot.component';
+import { TimeSlotModel } from './models/timeSlot.model';
+import Utils from 'src/app/utils/utils';
 
 defineFullCalendarElement();
 
@@ -30,7 +35,9 @@ defineFullCalendarElement();
 })
 export class CalendarPage{
 
+  localWeek! : WeekModel;
   calendar!: Calendar;
+  calendarDays! : {date : Date, el : HTMLElement}[];
   destroyed$: Subject<boolean> = new Subject();
   events! : any[];
 
@@ -47,13 +54,14 @@ export class CalendarPage{
   ) {}
 
   ionViewDidEnter(){
+    this.calendarDays = [];
     this.initCalendar();
-    this.tryRenderCalendar();
     this._calendarSvc.currentWeek$
                       .pipe(takeUntil(this.destroyed$))
                       .subscribe(week => {
                         if(week != null){
-                          this.renderTSEvents(week);
+                          this.localWeek = week;
+                          this.renderSlotEvents();
                         }
                       });
     this._calendarSvc.getWeek(new Date()).subscribe();
@@ -65,11 +73,21 @@ export class CalendarPage{
       initialView: window.innerWidth < 576 ? 'timeGridThreeDays' : 'timeGridWeek',
       locale: 'fr',
       height: '100%',
+      // validRange: {
+      //   start: '2022-11-19',
+      //   end: '2022-11-25'
+      // },
       allDaySlot: false,
       firstDay: 1, //Monday
       headerToolbar: false,
       events: [],
-      eventClick: async (info) => await this.eventHandler(info),
+      navLinks: true,
+      navLinkDayClick: async (date) => await this.dayHeaderHandler(date),
+      dayCellDidMount: ({ date, el }) => {
+        this.calendarDays.push({date, el});
+        this.renderDayBg(date, el);
+      },
+      eventClick: async (info) => await this.slotEventHandler(info),
       views: {
         timeGridThreeDays: {
           type: 'timeGrid',
@@ -81,34 +99,56 @@ export class CalendarPage{
     });
   }
 
-  tryRenderCalendar(){
-    const interval = setInterval(() => { //Make sure the calendar is well rendered
-      this.calendar.render();
-      if(this.calendarRef.nativeElement.offsetHeight > 0){
-        clearInterval(interval);
-      }
-    }, 50);
-  }
-
-  renderTSEvents(week : WeekModel){
-    this.calendar.removeAllEvents();
-    week.days.forEach((day) => {
+  renderSlotEvents(){
+    this.calendar.removeAllEvents(); //Necessary or possibly duplicate events
+    this.localWeek.days.forEach((day) => {
       day.timeSlots.forEach((timeSlot) => {
         this.calendar.addEvent({
           start : utils.toFullDate(day.date, timeSlot.startTime),
-          end : utils.toFullDate(day.date, timeSlot.endTime)
+          end : utils.toFullDate(day.date, timeSlot.endTime),
+          slot : timeSlot,
+          day : day.date
         });
       });
     });
+    this.calendarDays.forEach((cd) => this.renderDayBg(cd.date, cd.el));
+    this.calendar.render();
   }
 
-  async eventHandler(infos : EventClickArg){
-    // const modal = await this._modalCtrl.create({
-    // });
-    // modal.present();
+  renderDayBg(date : Date, el : HTMLElement){
+    if (Utils.compareDateToday(date) < 0){
+      el.style.backgroundColor = '#bababa';
+      return;
+    }
+    if(!this.localWeek) return;
+    const day : DayModel = this.localWeek.days.find(d => new Date(d.date).getDate() == date.getDate());
+    if(!day){
+      el.style.backgroundColor = '#86c5da';
+      return;
+    }
+    if(day.visible){
+      el.style.backgroundColor = '#a9d5a9';
+    }
+    else{
+      el.style.backgroundColor = 'red';
+    }
   }
 
-  async addSlot(){
+  async slotEventHandler(infos : EventClickArg){
+    const localSlot : TimeSlotModel = infos.event.extendedProps.slot;
+    if (!localSlot) return;
+    const modal = await this._modalCtrl.create({
+      component : ShowSlotComponent,
+      cssClass : 'show-slot-modal',
+      componentProps : {
+        slot : localSlot,
+        day : infos.event.extendedProps.day
+      }
+    });
+    modal.present();
+  }
+
+  async addSlotHandler(){
     const modal = await this._modalCtrl.create({
       component : AddSlotComponent,
       cssClass : 'add-modal'
@@ -116,11 +156,32 @@ export class CalendarPage{
     modal.present();
   }
 
+  async dayHeaderHandler(date : Date){
+    if(date.getDate() < (new Date()).getDate()) return;
+    const localday : DayModel = this.localWeek.days.find(d => new Date(d.date).getDate() == date.getDate());
+    if(!localday) return;
+    const modal = await this._modalCtrl.create({
+      component : EditDayComponent,
+      cssClass : 'edit-day-modal',
+      componentProps : {
+        day : localday
+      }
+    });
+    modal.present();
+  }
+
+  changeWeek(offset : number){
+    const otherWeekFDay : Date = new Date(this.localWeek.lastDay);
+    otherWeekFDay.setDate(otherWeekFDay.getDate() + offset);
+    this._calendarSvc.getWeek(otherWeekFDay)
+                      .subscribe();
+    if(offset > 0) this.calendar.next();
+    else this.calendar.prev();
+  }
+
   ionViewDidLeave() { // OnDestroy's ionic equivalent
     this.destroyed$.next(false);
     this.destroyed$.complete();
     this.calendar.destroy();
   }
-
-  //Web Worker
 }
