@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LoginResponseModel } from '../models/login-response.model';
-import { LoginRequestModel } from '../models/login-request.model';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AdminModel } from '../models/admin.model';
+import { LoginRequestModel, LoginResponseModel } from '../models/login.model';
 
 @Injectable({
   providedIn: 'root'
@@ -41,12 +40,12 @@ export class LoginService {
       );
   }
 
-  loginMock(){ //Method for developement without API purpose
-    this.token$.next("test test test");
-    this.profile$.next({name : 'Test', email : 'test@mail.com'});
-    let string = JSON.stringify({user : this.profile$.value, token : this.token$.value});
-    localStorage.setItem('user', string);
-  }
+  // loginMock(){ //Method for developement without API purpose
+  //   this.token$.next("test test test");
+  //   this.profile$.next({name : 'Test', email : 'test@mail.com'});
+  //   let string = JSON.stringify({user : this.profile$.value, token : this.token$.value});
+  //   localStorage.setItem('user', string);
+  // }
 
   logout(){
     this.token$.next(null);

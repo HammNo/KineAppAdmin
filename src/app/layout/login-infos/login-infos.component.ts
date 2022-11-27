@@ -11,7 +11,7 @@ import { AdminModel } from 'src/app/core/models/admin.model';
   templateUrl: './login-infos.component.html',
   styleUrls: ['./login-infos.component.scss'],
 })
-export class LoginInfosComponent implements OnInit, OnDestroy {
+export class LoginInfosComponent implements OnInit {
 
   isLogged : boolean = false;
   destroyed$: Subject<boolean> = new Subject();
@@ -41,11 +41,6 @@ export class LoginInfosComponent implements OnInit, OnDestroy {
                           this.profile = data;
                         }
                       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(false);
-    this.destroyed$.complete();
   }
 
   logout(){

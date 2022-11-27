@@ -50,4 +50,33 @@ export class ToastTemplatesService {
     })).present();
   }
 
+  async getWeekFail(){
+    (await this.toastrCtrl.create({
+      message : "Attention, cette semaine n'a pas été implémentée.",
+      duration : 2000,
+      color : 'warning',
+      cssClass: 'center-text',
+      position : 'bottom',
+    })).present();
+  }
+
+  async dayRevealSuccess(){
+    (await this.toastrCtrl.create({
+      message : "Le jour est maintenant visible.",
+      duration : 2000,
+      color : 'success',
+      cssClass: 'center-text',
+      position : 'bottom',
+    })).present();
+  }
+
+  async weekAddSuccess(){
+    (await this.toastrCtrl.create({
+      message : "La semaine a été correctement implémentée.",
+      duration : 2000,
+      color : 'success',
+      cssClass: 'center-text',
+      position : 'bottom',
+    })).present();
+  }
 }

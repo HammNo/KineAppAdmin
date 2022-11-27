@@ -21,6 +21,17 @@ export class ShowSlotComponent {
   ionViewWillEnter(){
   }
 
+  getFrStatus() : string{
+    switch (this.slot.status){
+      case 0:
+        return 'Libre';
+      case 1 :
+        return 'En attente de confirmation';
+      default :
+        return 'Réservé';
+    }
+  }
+
   dismiss(){
     this._modalCtrl.dismiss();
   }

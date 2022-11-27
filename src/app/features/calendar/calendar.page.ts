@@ -24,6 +24,8 @@ import { EditDayComponent } from './pages/edit-day/edit-day.component';
 import { ShowSlotComponent } from './pages/show-slot/show-slot.component';
 import { TimeSlotModel } from './models/timeSlot.model';
 import Utils from 'src/app/utils/utils';
+import { ToastTemplatesService } from 'src/app/core/services/toast-templates.service';
+import { AddWeekComponent } from './pages/add-week/add-week.component';
 
 defineFullCalendarElement();
 
@@ -35,11 +37,10 @@ defineFullCalendarElement();
 })
 export class CalendarPage{
 
-  localWeek! : WeekModel;
+  localWeek? : WeekModel;
   calendar!: Calendar;
   calendarDays! : {date : Date, el : HTMLElement}[];
   destroyed$: Subject<boolean> = new Subject();
-  events! : any[];
 
   @ViewChild('calendar') calendarRef: ElementRef<FullCalendarElement>; //Required to get the calendar
 
@@ -50,7 +51,8 @@ export class CalendarPage{
 
   constructor(
     private _modalCtrl: ModalController,
-    private _calendarSvc : CalendarService
+    private _calendarSvc : CalendarService,
+    private _toastTemplatesSvc : ToastTemplatesService,
   ) {}
 
   ionViewDidEnter(){
@@ -58,9 +60,10 @@ export class CalendarPage{
     this.initCalendar();
     this._calendarSvc.currentWeek$
                       .pipe(takeUntil(this.destroyed$))
-                      .subscribe(week => {
-                        if(week != null){
+                      .subscribe({
+                        next : (week) => {
                           this.localWeek = week;
+                          this.calendarDays.forEach((cd) => this.renderDayBackground(cd.date, cd.el));
                           this.renderSlotEvents();
                         }
                       });
@@ -73,10 +76,6 @@ export class CalendarPage{
       initialView: window.innerWidth < 576 ? 'timeGridThreeDays' : 'timeGridWeek',
       locale: 'fr',
       height: '100%',
-      // validRange: {
-      //   start: '2022-11-19',
-      //   end: '2022-11-25'
-      // },
       allDaySlot: false,
       firstDay: 1, //Monday
       headerToolbar: false,
@@ -84,8 +83,8 @@ export class CalendarPage{
       navLinks: true,
       navLinkDayClick: async (date) => await this.dayHeaderHandler(date),
       dayCellDidMount: ({ date, el }) => {
+        if(this.calendarDays.length > 6) this.calendarDays = []; //Because dayCellDidMount is triggered each time the calendar is refreshed (ex : week change)
         this.calendarDays.push({date, el});
-        this.renderDayBg(date, el);
       },
       eventClick: async (info) => await this.slotEventHandler(info),
       views: {
@@ -100,27 +99,34 @@ export class CalendarPage{
   }
 
   renderSlotEvents(){
-    this.calendar.removeAllEvents(); //Necessary or possibly duplicate events
-    this.localWeek.days.forEach((day) => {
-      day.timeSlots.forEach((timeSlot) => {
-        this.calendar.addEvent({
-          start : utils.toFullDate(day.date, timeSlot.startTime),
-          end : utils.toFullDate(day.date, timeSlot.endTime),
-          slot : timeSlot,
-          day : day.date
+    this.calendar.removeAllEvents(); //Necessary, otherwise possible event duplication
+    if(this.localWeek != null){
+      this.localWeek.days.forEach((day) => {
+        day.timeSlots.forEach((timeSlot) => {
+          this.calendar.addEvent({
+            start : utils.toFullDate(day.date, timeSlot.startTime),
+            end : utils.toFullDate(day.date, timeSlot.endTime),
+            slot : timeSlot,
+            day : day.date
+          });
         });
       });
-    });
-    this.calendarDays.forEach((cd) => this.renderDayBg(cd.date, cd.el));
+    }
     this.calendar.render();
   }
 
-  renderDayBg(date : Date, el : HTMLElement){
-    if (Utils.compareDateToday(date) < 0){
+  renderDayBackground(date : Date, el : HTMLElement){
+    if(Utils.compareDateToday(date) < 0){
       el.style.backgroundColor = '#bababa';
       return;
     }
-    if(!this.localWeek) return;
+    if(this.localWeek == null){
+      return;
+    }
+    if(Utils.compareDateToday(date) == 0){
+      el.style.backgroundColor = '#F1E5AC';
+      return;
+    }
     const day : DayModel = this.localWeek.days.find(d => new Date(d.date).getDate() == date.getDate());
     if(!day){
       el.style.backgroundColor = '#86c5da';
@@ -130,7 +136,7 @@ export class CalendarPage{
       el.style.backgroundColor = '#a9d5a9';
     }
     else{
-      el.style.backgroundColor = 'red';
+      el.style.backgroundColor = '#ff7f7f';
     }
   }
 
@@ -151,13 +157,24 @@ export class CalendarPage{
   async addSlotHandler(){
     const modal = await this._modalCtrl.create({
       component : AddSlotComponent,
-      cssClass : 'add-modal'
+      cssClass : 'addTSlot-modal'
+    });
+    modal.present();
+  }
+
+  async addWeekHandler(){
+    const modal = await this._modalCtrl.create({
+      component : AddWeekComponent,
+      cssClass : 'addWeek-modal',
+      componentProps : {
+        dayOfToAddWeek : this.calendar.getDate()
+      }
     });
     modal.present();
   }
 
   async dayHeaderHandler(date : Date){
-    if(date.getDate() < (new Date()).getDate()) return;
+    if(Utils.compareDateToday(date) < 0) return;
     const localday : DayModel = this.localWeek.days.find(d => new Date(d.date).getDate() == date.getDate());
     if(!localday) return;
     const modal = await this._modalCtrl.create({
@@ -171,12 +188,15 @@ export class CalendarPage{
   }
 
   changeWeek(offset : number){
-    const otherWeekFDay : Date = new Date(this.localWeek.lastDay);
-    otherWeekFDay.setDate(otherWeekFDay.getDate() + offset);
-    this._calendarSvc.getWeek(otherWeekFDay)
-                      .subscribe();
     if(offset > 0) this.calendar.next();
     else this.calendar.prev();
+    this._calendarSvc.getWeek(this.calendar.getDate())
+                        .subscribe({
+                          next : () => {},
+                          error : (err) => {
+                            this._toastTemplatesSvc.getWeekFail();
+                          }
+                        });
   }
 
   ionViewDidLeave() { // OnDestroy's ionic equivalent

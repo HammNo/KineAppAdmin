@@ -2,7 +2,16 @@
 
 <full-calendar #calendar></full-calendar>
 <div class="flex-row flex-jCenter ion-margin-top">
-  <ion-button size="small" (click)="addSlotHandler()">Ajouter</ion-button>
-  <ion-button size="small" (click)="changeWeek(-7)">Précédent</ion-button>
-  <ion-button size="small" (click)="changeWeek(1)">Suivant</ion-button>
+  <ion-button color="primary" (click)="changeWeek(-1)">
+    <ion-icon name="arrow-back-circle-outline"></ion-icon>
+  </ion-button>
+  <ion-button color="success" (click)="addSlotHandler()">
+    <ion-icon name="add-circle-outline"></ion-icon>
+  </ion-button>
+  <ion-button color="dark" [disabled]="this.localWeek" (click)="addWeekHandler()">
+    <ion-icon name="add-circle-outline"></ion-icon>
+  </ion-button>
+  <ion-button color="primary" (click)="changeWeek(1)">
+    <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+  </ion-button>
 </div>

@@ -7,3 +7,9 @@ export interface WeekModel{
   note? : string;
   days : DayModel [];
 }
+
+export interface WeekAddModel{
+  dayOfModelWeek? : string;
+  dayOfCreationWeek : string;
+  note? : string;
+}

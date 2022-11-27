@@ -32,13 +32,12 @@ export class AddSlotComponent {
       startTime : this.fg.value.startTime + ':00',
       endTime : this.fg.value.endTime + ':00'
     }
-    this._calendarSvc.addSlot(newSlot).subscribe({
-                                        next : () => {
-                                          this._calendarSvc.getWeek(new Date()).subscribe();
-                                        },
-                                        error : (err) => {
-                                          console.log(err);
-                                        }
+    this._calendarSvc.addSlot(newSlot)
+                      .subscribe({
+                        next : () => {
+                          this._calendarSvc.refreshWeek().subscribe();
+                        },
+                        error : (err) => {}
     });
     this._modalCtrl.dismiss();
   }
