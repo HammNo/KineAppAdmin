@@ -45,7 +45,15 @@ export class CalendarService {
     return this._http.post<any>(environment.base_url + '/timeSlot', newSlot);
   }
 
-  revealDay(id : string){
+  revealDay(id : string) : Observable<any>{
     return this._http.patch<any>(environment.base_url + '/day/' + id +'/reveal', null);
+  }
+
+  switchWTemplateState(id : string) : Observable<any>{
+    return this._http.patch<any>(environment.base_url + '/week/' + id +'/switchTemplate', null);
+  }
+
+  getTemplateWeeks(): Observable<WeekModel[]> {
+    return this._http.get<WeekModel[]>(environment.base_url + '/week/getTemplates')
   }
 }

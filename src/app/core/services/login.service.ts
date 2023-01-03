@@ -40,13 +40,6 @@ export class LoginService {
       );
   }
 
-  // loginMock(){ //Method for developement without API purpose
-  //   this.token$.next("test test test");
-  //   this.profile$.next({name : 'Test', email : 'test@mail.com'});
-  //   let string = JSON.stringify({user : this.profile$.value, token : this.token$.value});
-  //   localStorage.setItem('user', string);
-  // }
-
   logout(){
     this.token$.next(null);
     this.profile$.next(null);

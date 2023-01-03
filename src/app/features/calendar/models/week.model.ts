@@ -5,6 +5,7 @@ export interface WeekModel{
   firstDay : Date;
   lastDay : Date;
   note? : string;
+  isTemplate : boolean;
   days : DayModel [];
 }
 

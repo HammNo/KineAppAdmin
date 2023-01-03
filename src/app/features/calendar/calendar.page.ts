@@ -199,6 +199,17 @@ export class CalendarPage{
                         });
   }
 
+  switchTemplateState(){
+    this._calendarSvc.switchWTemplateState(this.localWeek.id)
+                        .subscribe({
+                          next : () => {
+                            this._calendarSvc.refreshWeek().subscribe();
+                          },
+                          error : (err) => {
+                          }
+                        });
+  }
+
   ionViewDidLeave() { // OnDestroy's ionic equivalent
     this.destroyed$.next(false);
     this.destroyed$.complete();

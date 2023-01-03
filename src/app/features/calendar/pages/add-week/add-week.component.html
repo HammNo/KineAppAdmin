@@ -16,13 +16,16 @@
 </ion-header>
 
 <ion-content>
-<form class="ion-margin-top" [formGroup]="fg" *ngIf="fg"  (ngSubmit)="submit()">
-  <ion-item>
-    <ion-label>Jour de la semaine modèle</ion-label>
-    <ion-input type="date" formControlName="dayOfModelWeek"></ion-input>
-  </ion-item>
-  <div class="flex-row flex-jCenter ion-margin-top">
-    <ion-button size="small" type="submit" [disabled]="!fg.valid">Ajouter</ion-button>
-  </div>
-</form>
+  <full-calendar #modelWCalendar></full-calendar>
+  <form class="ion-margin-top" [formGroup]="fg" *ngIf="fg" (ngSubmit)="submit()">
+    <ion-item>
+      <ion-select formControlName="modelWeek" interface="popover" placeholder="Semaine modèle">
+        <ion-select-option *ngFor="let week of templateWeeks" [value]="week">{{week.firstDay | date:
+          'dd/MM/yyyy'}} - {{week.lastDay | date: 'dd/MM/yyyy'}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div class="flex-row flex-jCenter ion-margin-top">
+      <ion-button size="small" type="submit" [disabled]="!fg.valid">Ajouter</ion-button>
+    </div>
+  </form>
 </ion-content>

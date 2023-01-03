@@ -14,4 +14,7 @@
   <ion-button color="primary" (click)="changeWeek(1)">
     <ion-icon name="arrow-forward-circle-outline"></ion-icon>
   </ion-button>
+  <ion-button *ngIf="localWeek" [color]="(localWeek.isTemplate)? 'danger' : 'success' " (click)="switchTemplateState()">
+    <ion-icon name="save-outline"></ion-icon>
+  </ion-button>
 </div>
